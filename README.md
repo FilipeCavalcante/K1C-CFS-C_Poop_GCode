@@ -80,3 +80,9 @@ Goal: all the purging happens in the external poop, keeping the prime tower as s
 | Process → Others | **Minimal purge on wipe tower** | `15 mm³` |
 | Process → Others | **Prime tower width** | `25 mm` (just enough to stabilize pressure after the swap) |
 | Process → Flush options | **Flush into objects' infill** | optional — diverts purge into hidden infill for extra savings (avoid with translucent parts) |
+
+---
+
+## License
+
+[MIT](LICENSE) — free to use, modify, and redistribute with attribution. The [Printables listing](printables.md) is published under CC BY 4.0.
