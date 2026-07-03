@@ -6,7 +6,7 @@
 
 ## Title
 
-**K1C + CFS-C: External Poop Filament Change G-code (Bambu-style, color-aware purge)**
+**K1C + CFS-C: External Poop Filament Change G-code (color-aware purge)**
 
 ## Summary (short description)
 
@@ -18,7 +18,9 @@ Change filament G-code for the Creality K1C + CFS-C that replaces the giant purg
 
 ### 🎯 What it does
 
-Multicolor printing on the K1C + CFS-C normally wastes a lot of filament on the purge/prime tower. This G-code moves the purging **off the print area**, Bambu Lab style:
+**This exists exclusively to solve the giant purge tower problem on Creality printers paired with the recently released CFS-C.** Unlike the regular CFS, the CFS-C has no built-in external purging — all the color-change waste gets dumped onto a huge purge/prime tower on your bed. Printers using the standard **CFS (without the -C) don't have this problem**: their stock firmware already purges this way, ejecting the poop out the back of the printer.
+
+If you have a CFS-C, this G-code brings that behavior back by moving the purging **off the print area**:
 
 - 💩 **External poop** — after each filament swap, the nozzle purges at the rear-right corner of the bed instead of on a tall purge tower
 - 🎨 **Color-aware purge volume** — uses the slicer's `{flush_length}` placeholder, so black → white purges a lot while light → dark purges almost nothing (computed from your Flushing volumes matrix, capped at E160)
