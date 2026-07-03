@@ -9,7 +9,9 @@ G1 Z{z_after_toolchange} F600                      ; return to the toolchange he
 ; ============================================================
 ; ⚠️  CALIBRATION REQUIRED:
 ;   X215 Y215 → free corner of your bed for the poop
-;   E100      → purge volume (adjust using the transition table)
+;   Purge volume → dynamic via {flush_length}: comes from the
+;     Flushing volumes matrix × Flushing multiplier (0.3);
+;     capped at E160 whenever the matrix asks for more than 150mm
 ;   X213 Y200–Y223 → shake travel range to eject the poop
 ;   Z4        → height during the shake (never use Z0)
 ; ============================================================
@@ -25,13 +27,19 @@ G1 Z{z_after_toolchange} F600                      ; return to the toolchange he
     G90                     ; back to absolute mode for X/Y/Z
     M83                     ; extruder in relative mode (E becomes an amount, not a position)
 
-    ; --- STEP 3: External poop ---
-    M106 P0 S50             ; part fan low (~20%) during the purge
+    ; --- STEP 3: External poop (dynamic purge volume) ---
     G1 X215 Y215 F10000     ; reposition at the poop corner
-    G1 E100 F300            ; purge 100mm of NEW filament (pushes out the previous color)
+    M106 P0 S10             ; part fan very low (~4%) during the purge
+    G4 P500                 ; dwell 0.5s (fan spin-up before purging)
+    ; DEBUG: purge computed for this transition = {flush_length}mm
+    {if flush_length > 150}
+    G1 E160 F300            ; ceiling: caps the purge at 160mm (a bigger poop may not detach on the shake)
+    {else}
+    G1 E{flush_length} F300 ; purge exactly what the color matrix computed
+    {endif}
     G4 P1000                ; dwell 1s to relieve nozzle pressure
     G1 E-1.0 F600           ; light 1mm retraction (prevents ooze)
-    M106 P0 S220            ; part fan high (~86%) to solidify the poop
+    M106 P0 S220            ; part fan high (~86%) to solidify the poop and blow away from bed
     G92 E0                  ; reset the extruder counter
 
 
